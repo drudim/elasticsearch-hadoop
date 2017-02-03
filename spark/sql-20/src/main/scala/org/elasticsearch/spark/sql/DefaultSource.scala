@@ -151,9 +151,6 @@ private[sql] case class ElasticsearchRelation(parameters: Map[String, String], @
       if (!requiredColumns.contains(metadata)) {
         paramWithScan += (ConfigurationOptions.ES_READ_METADATA -> false.toString())
       }
-      else {
-        filteredColumns = requiredColumns.filter( _ != metadata)
-      }
     }
 
     paramWithScan += (InternalConfigurationOptions.INTERNAL_ES_TARGET_FIELDS ->
