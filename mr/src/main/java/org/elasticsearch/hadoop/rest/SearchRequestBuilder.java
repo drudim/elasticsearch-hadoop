@@ -183,6 +183,8 @@ public class SearchRequestBuilder {
         // override fields
         if (StringUtils.hasText(fields)) {
             uriParams.put("_source", StringUtils.concatenateAndUriEncode(StringUtils.tokenize(fields), StringUtils.DEFAULT_DELIMITER));
+        } else if (fields == null) {
+            uriParams.put("_source", "_id");
         }
 
         // set shard preference

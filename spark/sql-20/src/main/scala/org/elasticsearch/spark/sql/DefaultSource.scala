@@ -156,9 +156,12 @@ private[sql] case class ElasticsearchRelation(parameters: Map[String, String], @
       }
     }
 
-    paramWithScan += (InternalConfigurationOptions.INTERNAL_ES_TARGET_FIELDS ->
-                      StringUtils.concatenate(filteredColumns.asInstanceOf[Array[Object]], StringUtils.DEFAULT_DELIMITER))
+    if (filteredColumns.length > 0)
+      paramWithScan += (InternalConfigurationOptions.INTERNAL_ES_TARGET_FIELDS ->
+                        StringUtils.concatenate(filteredColumns.asInstanceOf[Array[Object]], StringUtils.DEFAULT_DELIMITER))
 
+    paramWithScan += (Utils.DATA_SOURCE_REQUIRED_COLUMNS ->
+                      StringUtils.concatenate(requiredColumns.asInstanceOf[Array[Object]], StringUtils.DEFAULT_DELIMITER))
     
     if (filters != null && filters.size > 0) {
       if (Utils.isPushDown(cfg)) {

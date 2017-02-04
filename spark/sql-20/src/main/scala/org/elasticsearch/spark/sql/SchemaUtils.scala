@@ -19,15 +19,14 @@
 package org.elasticsearch.spark.sql
 
 import java.util.ArrayList
-import java.util.{ LinkedHashSet => JHashSet }
-import java.util.{ List => JList }
-import java.util.{ Map => JMap }
+import java.util.{LinkedHashSet => JHashSet}
+import java.util.{List => JList}
+import java.util.{Map => JMap}
 import java.util.Properties
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 import scala.collection.JavaConverters.propertiesAsScalaMapConverter
 import scala.collection.mutable.ArrayBuffer
-
 import org.apache.spark.sql.types.ArrayType
 import org.apache.spark.sql.types.BinaryType
 import org.apache.spark.sql.types.BooleanType
@@ -271,16 +270,21 @@ private[sql] object SchemaUtils {
     val rowInfo = (new Properties, new Properties)
 
     doDetectInfo(rowInfo, ROOT_LEVEL_NAME, struct)
-    val csv = settings.getScrollFields()
-    // if a projection is applied (filtering or projection) use that instead
-    if (StringUtils.hasText(csv)) {
+
+    val requiredColumns = settings.getProperty(Utils.DATA_SOURCE_REQUIRED_COLUMNS)
+    val scrollFields = settings.getScrollFields()
+
+    if (StringUtils.hasText(requiredColumns)) {
+      rowInfo._1.setProperty(ROOT_LEVEL_NAME, requiredColumns)
+    } else if (StringUtils.hasText(scrollFields)) {
       if (settings.getReadMetadata) {
-        rowInfo._1.setProperty(ROOT_LEVEL_NAME, csv + StringUtils.DEFAULT_DELIMITER + settings.getReadMetadataField)
+        rowInfo._1.setProperty(ROOT_LEVEL_NAME, scrollFields + StringUtils.DEFAULT_DELIMITER + settings.getReadMetadataField)
       }
       else {
-        rowInfo._1.setProperty(ROOT_LEVEL_NAME, csv)
+        rowInfo._1.setProperty(ROOT_LEVEL_NAME, scrollFields)
       }
     }
+
     rowInfo
   }
 
