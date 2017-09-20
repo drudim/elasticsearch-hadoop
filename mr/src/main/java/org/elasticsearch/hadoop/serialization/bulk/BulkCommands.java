@@ -45,6 +45,9 @@ public abstract class BulkCommands {
         else if (ConfigurationOptions.ES_OPERATION_UPSERT.equals(operation)) {
             factory = new UpdateBulkFactory(settings, true, metaExtractor, version);
         }
+        else if (ConfigurationOptions.ES_OPERATION_DELETE.equals(operation)) {
+            factory = new DeleteBulkFactory(settings, metaExtractor);
+        }
         else {
             throw new EsHadoopIllegalArgumentException("Unknown operation " + operation);
         }

@@ -157,7 +157,7 @@ public abstract class AbstractBulkFactory implements BulkFactory {
 
         @Override
         public String toString() {
-            return "FieldWriter for " + extractor;
+            return  "FieldWriter for " + extractor;
         }
     }
 
@@ -470,7 +470,7 @@ public abstract class AbstractBulkFactory implements BulkFactory {
     // optimization method used when dealing with 'static' extractors
     // concatenates all the strings to minimize the amount of data needed for construction
     // TODO This does not compact a list of objects - it is COMPILLING it, and changing the structure. Make this more explicit
-    private List<Object> compact(List<Object> list) {
+    public List<Object> compact(List<Object> list) {
         if (list == null || list.isEmpty()) {
             return null;
         }
